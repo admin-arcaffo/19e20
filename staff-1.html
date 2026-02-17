@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Staff Pulse | Ordo Legatum</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --bg-card: #121212;
+            --gold-main: #C5A059;
+            --gold-dim: #8A703D;
+            --text-main: #EAEAEA;
+            --text-muted: #888888;
+            --alert: #D32F2F;
+            --safe: #2E7D32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            padding-bottom: 90px;
+        }
+
+        h1,
+        h2,
+        .serif-font {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            color: var(--gold-main);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .live-indicator {
+            font-size: 0.7rem;
+            background: var(--alert);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .now-card {
+            background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
+            border: 1px solid var(--gold-main);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 30px rgba(197, 160, 89, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-soon {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(197, 160, 89, 0.18);
+            border: 1px solid rgba(197, 160, 89, 0.6);
+            color: var(--gold-main);
+            font-size: 0.7rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .now-label {
+            color: var(--gold-main);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .now-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .now-time {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold-main);
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .next-card {
+            background: var(--bg-card);
+            border-left: 3px solid var(--text-muted);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .next-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .next-title {
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .quick-btn {
+            background: var(--bg-card);
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .quick-btn strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .quick-icon {
+            font-size: 1.2rem;
+        }
+
+        .schedule-list {
+            display: none;
+        }
+
+        .schedule-list.active {
+            display: block;
+        }
+
+        .schedule-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #222;
+            align-items: flex-start;
+        }
+
+        .time-col {
+            min-width: 54px;
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--gold-dim);
+            font-weight: 600;
+        }
+
+        .info-col {
+            flex: 1;
+        }
+
+        .info-col h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: #eee;
+        }
+
+        .info-col p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            min-width: 78px;
+        }
+
+        .btn-mini {
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            color: #cfcfcf;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 78px;
+            text-align: center;
+        }
+
+        .btn-mini:hover {
+            border-color: rgba(197, 160, 89, 0.45);
+        }
+
+        .btn-danger {
+            border-color: rgba(211, 47, 47, 0.35);
+            color: #ffbdbd;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            background: #111;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: var(--gold-main);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-align: center;
+            opacity: 0.5;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            color: var(--gold-main);
+        }
+
+        .nav-icon {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-text {
+            font-size: 0.7rem;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            text-decoration: none;
+        }
+
+        #status-banner {
+            background: rgba(197, 160, 89, 0.10);
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            display: none;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        /* ==== BLOCO CRUD ==== */
+        .crud-card {
+            background: var(--bg-card);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .crud-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .crud-title h3 {
+            font-size: 0.95rem;
+            color: var(--gold-main);
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .crud-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .crud-row.three {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.72rem;
+            color: #777;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .field input {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 10px 10px;
+            color: #f0f0f0;
+            outline: none;
+            font-size: 0.92rem;
+        }
+
+        .field input:focus {
+            border-color: rgba(197, 160, 89, 0.6);
+        }
+
+        .crud-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--gold-main);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            color: #ddd;
+            font-weight: 600;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .crud-note {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.78rem;
+            line-height: 1.35;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 110px;
+            background: rgba(20, 20, 20, 0.92);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            color: #ddd;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 200;
+            max-width: 92vw;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="status-banner"></div>
+    <div class="toast" id="toast"></div>
+
+    <header>
+        <div class="brand serif-font">ORDO LEGATUM</div>
+        <div class="live-indicator" id="live-badge">AO VIVO</div>
+    </header>
+
+    <div id="view-dashboard" class="container">
+        <div class="now-card">
+            <div class="badge-soon" id="soon-badge">EM BREVE</div>
+
+            <span class="now-label" id="now-label">Acontecendo Agora</span>
+            <div class="now-title" id="now-title">Carregando...</div>
+            <div class="now-time" id="now-time">--:--</div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: #666;" id="timer-text"></div>
+        </div>
+
+        <div class="next-card" id="next-card">
+            <div class="next-label" id="next-label">A Seguir</div>
+            <div class="next-title" id="next-title">--</div>
+            <div style="font-size: 0.8rem; color: #666; margin-top: 5px;" id="next-time"></div>
+        </div>
+
+        <h3 class="serif-font" style="margin-bottom: 15px; color: var(--gold-main); font-size: 1rem;">Staff Info</h3>
+        <div class="quick-grid">
+            <a href="#" class="quick-btn">
+                <span class="quick-icon">📍</span>
+                <div><strong>Sala Ipê 01</strong><span style="font-size:0.7em">Bosque dos Ipês</span></div>
+            </a>
+            <a href="#" class="quick-btn">
+                <span class="quick-icon">🚗</span>
+                <div><strong>Valet</strong><span style="font-size:0.7em">Membros Only</span></div>
+            </a>
+            <a href="#" class="quick-btn">
+                <span class="quick-icon">🍽️</span>
+                <div><strong>Almoço</strong><span style="font-size:0.7em">Praça Alimentação</span></div>
+            </a>
+            <a href="#" class="quick-btn">
+                <span class="quick-icon">🎩</span>
+                <div><strong>Chapelaria</strong><span style="font-size:0.7em">Disponível</span></div>
+            </a>
+        </div>
+    </div>
+
+    <div id="view-agenda" class="container" style="display: none;">
+        <h2 class="serif-font" style="margin-bottom: 16px; text-align: center;">Cronograma</h2>
+
+        <div class="tabs">
+            <div class="tab active" onclick="setTab(1)">DIA 01 (19/02)</div>
+            <div class="tab" onclick="setTab(2)">DIA 02 (20/02)</div>
+        </div>
+
+        <!-- CRUD UI -->
+        <div class="crud-card">
+            <div class="crud-title">
+                <h3 class="serif-font">Gerenciar itens</h3>
+                <div style="font-size:0.78rem;color:#777" id="crud-day-label">DIA 01</div>
+            </div>
+
+            <div class="crud-row three">
+                <div class="field">
+                    <label>Início</label>
+                    <input type="time" id="crud-start" value="09:00" />
+                </div>
+                <div class="field">
+                    <label>Fim</label>
+                    <input type="time" id="crud-end" value="10:00" />
+                </div>
+                <div class="field">
+                    <label>Título</label>
+                    <input type="text" id="crud-title" placeholder="Ex.: Conteúdo" />
+                </div>
+            </div>
+
+            <div class="crud-actions">
+                <button class="btn-primary" id="crud-save-btn">Adicionar</button>
+                <button class="btn-secondary" id="crud-cancel-btn" style="display:none;">Cancelar</button>
+            </div>
+
+            <div class="crud-note">
+                • Toque em <b>Editar</b> em um item para atualizar. <br />
+                • Tudo é salvo neste dispositivo (localStorage).
+            </div>
+        </div>
+
+        <div id="list-day1" class="schedule-list active"></div>
+        <div id="list-day2" class="schedule-list"></div>
+    </div>
+
+    <a href="https://wa.me/5567996064591" class="fab" target="_blank" rel="noopener">💬</a>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="navTo('dashboard', this)">
+            <span class="nav-icon">⚡</span>
+            <span class="nav-text">Painel</span>
+        </div>
+        <div class="nav-item" onclick="navTo('agenda', this)">
+            <span class="nav-icon">📅</span>
+            <span class="nav-text">Agenda</span>
+        </div>
+    </nav>
+
+    <script>
+        // ==============================
+        // CONFIG DO EVENTO (GMT-4)
+        // ==============================
+        const EVENT_YEAR = 2026;
+        const TZ_OFFSET_HOURS = -4; // GMT-4
+        const TZ_OFFSET_MS = TZ_OFFSET_HOURS * 60 * 60 * 1000;
+
+        const EVENT_START_VIRTUAL = new Date(Date.UTC(EVENT_YEAR, 1, 19, 7, 30, 0, 0));
+        const EVENT_END_VIRTUAL = new Date(Date.UTC(EVENT_YEAR, 1, 20, 19, 0, 0, 0));
+
+        const COMING_WINDOW_MS = 24 * 60 * 60 * 1000;
+        const COMING_FROM_VIRTUAL = new Date(EVENT_START_VIRTUAL.getTime() - COMING_WINDOW_MS);
+
+        const params = new URLSearchParams(window.location.search);
+        const FORCE_DEMO = params.get("demo") === "1";
+
+        function nowInGmtMinus4() {
+            const utcMs = Date.now();
+            return new Date(utcMs + TZ_OFFSET_MS);
+        }
+
+        function partsInGmtMinus4(d) {
+            return {
+                month: d.getUTCMonth(),
+                day: d.getUTCDate(),
+                hour: d.getUTCHours(),
+                minute: d.getUTCMinutes()
+            };
+        }
+
+        function timeToMinutes(str) {
+            const [h, m] = str.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function minutesToTime(mins) {
+            const h = String(Math.floor(mins / 60)).padStart(2, '0');
+            const m = String(mins % 60).padStart(2, '0');
+            return `${h}:${m}`;
+        }
+
+        function formatCountdown(ms) {
+            const totalSec = Math.max(0, Math.floor(ms / 1000));
+            const days = Math.floor(totalSec / 86400);
+            const hours = Math.floor((totalSec % 86400) / 3600);
+            const mins = Math.floor((totalSec % 3600) / 60);
+
+            if (days > 0) return `${days}d ${hours}h ${mins}min`;
+            if (hours > 0) return `${hours}h ${mins}min`;
+            return `${mins}min`;
+        }
+
+        function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+        function toast(msg) {
+            const el = document.getElementById("toast");
+            el.textContent = msg;
+            el.style.display = "block";
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => el.style.display = "none", 2400);
+        }
+
+        // ==============================
+        // SCHEDULE DEFAULT
+        // ==============================
+        const defaultSchedule = {
+            day1: [
+                { start: "07:30", end: "08:20", title: "Welcome Coffee" },
+                { start: "08:20", end: "08:30", title: "Introdução" },
+                { start: "08:30", end: "09:00", title: "Dinâmica" },
+                { start: "09:00", end: "10:20", title: "Conteúdo" },
+                { start: "10:20", end: "10:30", title: "Intervalo" },
+                { start: "10:30", end: "12:00", title: "Convidado Especial" },
+                { start: "12:00", end: "12:30", title: "Perguntas e Respostas" },
+                { start: "12:30", end: "13:00", title: "Histórias que inspiram" },
+                { start: "13:00", end: "14:30", title: "Almoço (Praça)" },
+                { start: "14:30", end: "15:00", title: "Interação" },
+                { start: "15:00", end: "16:30", title: "Convidado Especial" },
+                { start: "16:30", end: "17:00", title: "Perguntas e Respostas" },
+                { start: "17:00", end: "17:15", title: "Coffee Break" },
+                { start: "17:15", end: "18:00", title: "Conteúdo" },
+                { start: "18:00", end: "18:30", title: "Dinâmica Final" }
+            ],
+            day2: [
+                { start: "07:30", end: "08:20", title: "Welcome Coffee" },
+                { start: "08:20", end: "08:30", title: "Introdução" },
+                { start: "08:30", end: "09:00", title: "Convidado Especial" },
+                { start: "09:00", end: "10:20", title: "Perguntas e Respostas" },
+                { start: "10:20", end: "10:30", title: "Intervalo" },
+                { start: "10:30", end: "12:15", title: "Conteúdo" },
+                { start: "12:15", end: "13:00", title: "Hotseat" },
+                { start: "13:00", end: "14:30", title: "Almoço (Praça)" },
+                { start: "14:30", end: "15:00", title: "Interação" },
+                { start: "15:00", end: "16:30", title: "Convidado Especial" },
+                { start: "16:30", end: "17:00", title: "Histórias que inspiram" },
+                { start: "17:00", end: "17:15", title: "Coffee Break" },
+                { start: "17:15", end: "18:00", title: "Convidado" },
+                { start: "18:00", end: "18:30", title: "Conteúdo" },
+                { start: "18:30", end: "19:00", title: "Coquetel Encerramento" }
+            ]
+        };
+
+        // ==============================
+        // PERSISTÊNCIA (localStorage)
+        // ==============================
+        const STORAGE_KEY = "ordo_schedule_v1";
+
+        function normalizeSchedule(s) {
+            const safe = { day1: Array.isArray(s?.day1) ? s.day1 : [], day2: Array.isArray(s?.day2) ? s.day2 : [] };
+            // remove itens inválidos
+            ["day1", "day2"].forEach(k => {
+                safe[k] = safe[k]
+                    .filter(it => it && typeof it.start === "string" && typeof it.end === "string" && typeof it.title === "string")
+                    .map(it => ({ start: it.start, end: it.end, title: it.title }));
+            });
+            return safe;
+        }
+
+        function loadSchedule() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return structuredClone(defaultSchedule);
+                const parsed = JSON.parse(raw);
+                const normalized = normalizeSchedule(parsed);
+                // se vier vazio, usa default
+                if (normalized.day1.length === 0 && normalized.day2.length === 0) return structuredClone(defaultSchedule);
+                return normalized;
+            } catch {
+                return structuredClone(defaultSchedule);
+            }
+        }
+
+        function saveSchedule() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+        }
+
+        // Schedule em memória (mutável)
+        let schedule = loadSchedule();
+
+        // ==============================
+        // CRUD STATE
+        // ==============================
+        let currentTabDay = 1; // 1=day1, 2=day2
+        let editingIndex = null; // number | null
+
+        function currentKey() { return currentTabDay === 1 ? "day1" : "day2"; }
+
+        function sortDay(key) {
+            schedule[key].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+        }
+
+        function validateItem(start, end, title) {
+            if (!start || !end || !title) return "Preencha início, fim e título.";
+            const sm = timeToMinutes(start);
+            const em = timeToMinutes(end);
+            if (Number.isNaN(sm) || Number.isNaN(em)) return "Horário inválido.";
+            if (em <= sm) return "O horário de fim precisa ser maior que o início.";
+            if (title.trim().length < 2) return "Título muito curto.";
+            return null;
+        }
+
+        function resetCrudForm() {
+            editingIndex = null;
+            document.getElementById("crud-start").value = "09:00";
+            document.getElementById("crud-end").value = "10:00";
+            document.getElementById("crud-title").value = "";
+            document.getElementById("crud-save-btn").textContent = "Adicionar";
+            document.getElementById("crud-cancel-btn").style.display = "none";
+        }
+
+        function fillCrudForm(item, idx) {
+            editingIndex = idx;
+            document.getElementById("crud-start").value = item.start;
+            document.getElementById("crud-end").value = item.end;
+            document.getElementById("crud-title").value = item.title;
+            document.getElementById("crud-save-btn").textContent = "Atualizar";
+            document.getElementById("crud-cancel-btn").style.display = "inline-block";
+        }
+
+        function crudSave() {
+            const key = currentKey();
+            const start = document.getElementById("crud-start").value;
+            const end = document.getElementById("crud-end").value;
+            const title = document.getElementById("crud-title").value.trim();
+
+            const err = validateItem(start, end, title);
+            if (err) { toast(err); return; }
+
+            if (editingIndex === null) {
+                schedule[key].push({ start, end, title });
+                sortDay(key);
+                saveSchedule();
+                renderLists();
+                toast("Item adicionado.");
+                resetCrudForm();
+            } else {
+                schedule[key][editingIndex] = { start, end, title };
+                sortDay(key);
+                saveSchedule();
+                renderLists();
+                toast("Item atualizado.");
+                resetCrudForm();
+            }
+        }
+
+        function crudDelete(dayKey, idx) {
+            const item = schedule[dayKey][idx];
+            const ok = confirm(`Remover "${item.title}" (${item.start}–${item.end})?`);
+            if (!ok) return;
+
+            schedule[dayKey].splice(idx, 1);
+            saveSchedule();
+            renderLists();
+            toast("Item removido.");
+
+            // se estava editando esse item, limpa o form
+            if (dayKey === currentKey() && editingIndex === idx) resetCrudForm();
+        }
+
+        function crudEdit(dayKey, idx) {
+            // muda pra tab correta se necessário
+            if (dayKey === "day1") setTab(1);
+            else setTab(2);
+
+            // após setTab, currentKey já está certo
+            const item = schedule[dayKey][idx];
+            fillCrudForm(item, idx);
+            // rola pro topo do crud
+            document.querySelector(".crud-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // (opcional) reset para o padrão
+        function resetToDefault() {
+            const ok = confirm("Voltar o cronograma para o padrão? Isso apaga as edições deste dispositivo.");
+            if (!ok) return;
+            schedule = structuredClone(defaultSchedule);
+            saveSchedule();
+            renderLists();
+            resetCrudForm();
+            toast("Cronograma restaurado.");
+        }
+
+        // ==============================
+        // ESTADO DO APP (Pré-evento / Ao vivo / Pós)
+        // ==============================
+        function getAppState() {
+            if (FORCE_DEMO) {
+                const demo = new Date(Date.UTC(EVENT_YEAR, 1, 19, 9, 0, 0, 0));
+                return { mode: "live", now: demo, dayKey: "day1", isDemo: true };
+            }
+
+            const now = nowInGmtMinus4();
+            const beforeStart = now.getTime() < EVENT_START_VIRTUAL.getTime();
+            const afterEnd = now.getTime() > EVENT_END_VIRTUAL.getTime();
+
+            if (beforeStart) return { mode: "coming", now, isDemo: false };
+            if (afterEnd) return { mode: "ended", now, isDemo: false };
+
+            const p = partsInGmtMinus4(now);
+            const dayKey = (p.month === 1 && p.day === 20) ? "day2" : "day1";
+            return { mode: "live", now, dayKey, isDemo: false };
+        }
+
+        // ==============================
+        // DASHBOARD
+        // ==============================
+        function updateDashboard() {
+            const state = getAppState();
+
+            const statusBanner = document.getElementById("status-banner");
+            const liveBadge = document.getElementById("live-badge");
+            const soonBadge = document.getElementById("soon-badge");
+            const nextCard = document.getElementById("next-card");
+
+            const nowLabelEl = document.getElementById("now-label");
+            const titleEl = document.getElementById("now-title");
+            const timeEl = document.getElementById("now-time");
+            const progressEl = document.getElementById("progress-bar");
+            const timerText = document.getElementById("timer-text");
+
+            const nextLabelEl = document.getElementById("next-label");
+            const nextTitleEl = document.getElementById("next-title");
+            const nextTimeEl = document.getElementById("next-time");
+
+            // Reset
+            progressEl.style.width = "0%";
+            liveBadge.style.display = "none";
+            statusBanner.style.display = "none";
+            soonBadge.style.display = "none";
+            nextCard.classList.remove("hide");
+
+            // PRÉ-EVENTO
+            if (state.mode === "coming") {
+                soonBadge.style.display = "inline-flex";
+                nextCard.classList.add("hide");
+                statusBanner.style.display = "block";
+                statusBanner.textContent = "Pré-evento — relógio em GMT-4";
+
+                nowLabelEl.textContent = "Está chegando";
+                titleEl.textContent = "Imersão Presencial — Ordo Legatum";
+                titleEl.style.color = "#fff";
+
+                timeEl.textContent = "Início: 19/02 • 07:30 (GMT-4)";
+
+                const msLeft = EVENT_START_VIRTUAL.getTime() - state.now.getTime();
+                timerText.textContent = `Faltam ${formatCountdown(msLeft)}`;
+
+                const total = EVENT_START_VIRTUAL.getTime() - COMING_FROM_VIRTUAL.getTime();
+                const elapsed = state.now.getTime() - COMING_FROM_VIRTUAL.getTime();
+                const pct = clamp((elapsed / total) * 100, 0, 100);
+                progressEl.style.width = `${pct}%`;
+                return;
+            }
+
+            // PÓS
+            if (state.mode === "ended") {
+                statusBanner.style.display = "block";
+                statusBanner.textContent = "Evento encerrado";
+                nowLabelEl.textContent = "Encerrado";
+                titleEl.textContent = "Fim das atividades";
+                titleEl.style.color = "#666";
+                timeEl.textContent = "20/02 • 19:00 (GMT-4)";
+                timerText.textContent = "";
+
+                nextLabelEl.textContent = "Obrigado";
+                nextTitleEl.textContent = "Até o próximo encontro";
+                nextTimeEl.textContent = "";
+                return;
+            }
+
+            // AO VIVO
+            if (state.isDemo) {
+                statusBanner.style.display = "block";
+                statusBanner.textContent = "Modo demo ativado via URL (?demo=1)";
+            }
+
+            nowLabelEl.textContent = "Acontecendo Agora";
+            nextLabelEl.textContent = "A Seguir";
+
+            const currentMinutes = state.now.getUTCHours() * 60 + state.now.getUTCMinutes();
+            const todayList = schedule[state.dayKey];
+
+            let activeItem = null;
+            let nextItem = null;
+
+            for (let i = 0; i < todayList.length; i++) {
+                const item = todayList[i];
+                const startM = timeToMinutes(item.start);
+                const endM = timeToMinutes(item.end);
+
+                if (currentMinutes >= startM && currentMinutes < endM) {
+                    activeItem = { ...item };
+                    activeItem.totalDuration = endM - startM;
+                    activeItem.elapsed = currentMinutes - startM;
+                    nextItem = todayList[i + 1] || null;
+                    break;
+                }
+
+                if (currentMinutes < startM) {
+                    nextItem = item;
+                    break;
+                }
+            }
+
+            if (activeItem) {
+                titleEl.textContent = activeItem.title;
+                titleEl.style.color = "#fff";
+                timeEl.textContent = `${activeItem.start} - ${activeItem.end}`;
+
+                const pct = (activeItem.elapsed / activeItem.totalDuration) * 100;
+                progressEl.style.width = `${pct}%`;
+
+                const minsLeft = activeItem.totalDuration - activeItem.elapsed;
+                timerText.textContent = `Restam aprox. ${minsLeft} min`;
+
+                liveBadge.style.display = "inline-block";
+            } else {
+                titleEl.textContent = "Aguardando próximo bloco";
+                titleEl.style.color = "#666";
+                timeEl.textContent = "--:--";
+                timerText.textContent = "";
+            }
+
+            if (nextItem) {
+                nextTitleEl.textContent = nextItem.title;
+                nextTimeEl.textContent = `Inicia às ${nextItem.start}`;
+            } else {
+                nextTitleEl.textContent = "Fim das atividades";
+                nextTimeEl.textContent = "";
+            }
+        }
+
+        // ==============================
+        // RENDER LISTAS (com botões CRUD)
+        // ==============================
+        function renderLists() {
+            const map = [
+                { key: "day1", el: "list-day1" },
+                { key: "day2", el: "list-day2" }
+            ];
+
+            map.forEach(({ key, el }) => {
+                const container = document.getElementById(el);
+                let html = "";
+
+                const list = schedule[key] || [];
+                if (list.length === 0) {
+                    html = `<div style="color:#666;font-size:0.9rem;padding:10px 0;">Sem itens.</div>`;
+                    container.innerHTML = html;
+                    return;
+                }
+
+                list.forEach((item, idx) => {
+                    html += `
+            <div class="schedule-item">
+              <div class="time-col">${item.start}</div>
+              <div class="info-col">
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>Até ${item.end}</p>
+              </div>
+              <div class="item-actions">
+                <button class="btn-mini" onclick="crudEdit('${key}', ${idx})">Editar</button>
+                <button class="btn-mini btn-danger" onclick="crudDelete('${key}', ${idx})">Deletar</button>
+              </div>
+            </div>
+          `;
+                });
+
+                container.innerHTML = html;
+            });
+
+            // atualiza label do CRUD
+            document.getElementById("crud-day-label").textContent = currentTabDay === 1 ? "DIA 01" : "DIA 02";
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        // ==============================
+        // NAVEGAÇÃO + TABS
+        // ==============================
+        function navTo(view, btn) {
+            document.getElementById('view-dashboard').style.display = 'none';
+            document.getElementById('view-agenda').style.display = 'none';
+            document.getElementById(`view-${view}`).style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function setTab(dayNum) {
+            currentTabDay = dayNum;
+
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.schedule-list').forEach(l => l.classList.remove('active'));
+
+            document.querySelectorAll('.tab')[dayNum - 1].classList.add('active');
+            document.getElementById(`list-day${dayNum}`).classList.add('active');
+
+            // atualiza label do CRUD
+            document.getElementById("crud-day-label").textContent = dayNum === 1 ? "DIA 01" : "DIA 02";
+
+            // se estiver editando e trocou de tab, limpa form
+            resetCrudForm();
+        }
+
+        // ==============================
+        // HOOKS CRUD
+        // ==============================
+        document.getElementById("crud-save-btn").addEventListener("click", crudSave);
+        document.getElementById("crud-cancel-btn").addEventListener("click", () => {
+            resetCrudForm();
+            toast("Edição cancelada.");
+        });
+
+        // Dica: atalho escondido para resetar: clique longo no título "Cronograma"
+        let __pressTimer = null;
+        document.querySelector("#view-agenda h2").addEventListener("touchstart", () => {
+            __pressTimer = setTimeout(resetToDefault, 900);
+        });
+        document.querySelector("#view-agenda h2").addEventListener("touchend", () => {
+            if (__pressTimer) clearTimeout(__pressTimer);
+        });
+
+        // INIT
+        renderLists();
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+
+</html>
